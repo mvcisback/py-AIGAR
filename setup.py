@@ -15,6 +15,7 @@ setup(
         'py-aiger-bv',
         'funcy',
         'dd',
+        'python-sat',
     ],
     packages=find_packages(),
 )
