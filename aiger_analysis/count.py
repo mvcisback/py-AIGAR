@@ -1,5 +1,3 @@
-from math import exp, log2
-
 import aiger
 import funcy as fn
 
