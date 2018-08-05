@@ -12,6 +12,7 @@ setup(
     license='MIT',
     install_requires=[
         'py-aiger',
+        'py-aiger-bv',
         'funcy',
         'dd',
     ],
