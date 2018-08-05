@@ -46,4 +46,3 @@ def test_count_and(circ1, circ2):
 def test_count_le(i):
     expr = atom(4, 'x') < atom(4, i)
     assert count.count(expr.aigbv.aig) == i + 8
-
