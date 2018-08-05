@@ -1,3 +1,4 @@
+git+git://github.com/mvcisback/hypothesis-cfg.git@master#egg=hypothesis_cfg
 git+git://github.com/mvcisback/py-aiger.git@master#egg=py-aiger
 git+git://github.com/mvcisback/py-aiger-bv.git@master#egg=py-aiger-bv
 codecov==2.0.15
