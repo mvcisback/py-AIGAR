@@ -1,5 +1,5 @@
 from aiger import atom
-from aiger_analysis import analysis
+from aiger_analysis.analysis import satisfiable
 
 x, y = atom('x'), atom('y')
 expr_sat = x | y
