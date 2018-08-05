@@ -1,4 +1,3 @@
-
 """
 This module provides basic operations on aig circuits, such as
 satisfiability queries, model counting, and quantifier elimination.
@@ -69,10 +68,3 @@ def satisfiable(aig):
         formula.append(clause)
     with Lingeling(bootstrap_with=formula.clauses) as ling:
         return ling.solve()
-
-
-# def count(aig, variables=None):
-
-
-# def quantify(aig, quantifiers):
-    # quantify(aig, [('a', [1, 2, 3]), ('e', [4, 5, 6])])
