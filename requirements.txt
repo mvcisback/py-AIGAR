@@ -4,7 +4,7 @@ git+git://github.com/mvcisback/py-aiger-bv.git@master#egg=py-aiger-bv
 codecov==2.0.15
 dd==0.5.4
 funcy==1.10.3
-hypothesis==3.66.29
+hypothesis==3.66.30
 pytest==3.2.3 # pyup: ignore
 pytest-cov==2.5.1 # pyup: ignore
 pytest-flake8==0.9 # pyup: ignore
