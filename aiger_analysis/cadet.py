@@ -4,10 +4,9 @@ import tempfile
 import functools as fn
 
 import aiger
-from aiger import AIG, BoolExpr
-from aigerbv import AIGBV, SignedBVExpr, UnsignedBVExpr
 from aiger_analysis import is_satisfiable, is_valid
 import aiger_analysis.common as cmn
+
 
 def _call_cadet_on_file(file_name,
                         result_file,
@@ -27,6 +26,8 @@ def _call_cadet_on_file(file_name,
                 , stdout=PIPE  # comment this line to see more output
                )
     assert not projection or ret == 10
+    if projection:
+        ret = aiger.parser.load(result_file)
     return ret
 
 
@@ -44,13 +45,10 @@ def _call_cadet(aig, existentials, projection=False):
         input_file = open(aig_name, "w+")
         input_file.write(str(aig))
         input_file.close()
-
-        if projection:
-            result_file = os.path.join(tmpdirname, 'result.aag')
-            _call_cadet_on_file(aig_name, result_file, prefix, projection=True)
-            return aiger.parser.load(result_file)
-        else:
-            return _call_cadet_on_file(aig_name, None, prefix)
+        return _call_cadet_on_file(aig_name,
+                                   os.path.join(tmpdirname, 'result.aag'),
+                                   prefix,
+                                   projection=projection)
 
 
 def eliminate(e, variables):
@@ -82,12 +80,12 @@ def is_true_QBF(e, quantifiers):
     if len(quantifiers) is 1:  # solve with SAT
         if quantifiers[0][0] is 'a':
             return is_valid(aig)
-        else: 
+        else:
             assert quantifiers[0][0] is 'e'
             return is_satisfiable(aig)
     elif len(quantifiers) is 2:  # 2QBF
         if quantifiers[0][0] is 'e':
-            e = ~BoolExpr(aig)
+            e = ~aiger.BoolExpr(aig)
             aig = e.aig
         return _call_cadet(aig, quantifiers[1][1]) == 10
     else:

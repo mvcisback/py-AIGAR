@@ -6,7 +6,6 @@ satisfiability queries, model counting, and quantifier elimination.
 import funcy as fn
 
 import aiger
-import aigerbv
 from pysat.formula import CNF
 from pysat.solvers import Lingeling
 import aiger_analysis.common as cmn
