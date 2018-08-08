@@ -3,32 +3,23 @@ This module provides basic operations on aig circuits, such as
 satisfiability queries, model counting, and quantifier elimination.
 """
 
-import aiger
-from aiger.expr import BoolExpr
-from pysat.formula import CNF
-from pysat.solvers import Lingeling
-
 import funcy as fn
 
+import aiger
+import aigerbv
+from pysat.formula import CNF
+from pysat.solvers import Lingeling
+import aiger_analysis.common as cmn
 
-def tseitin(e):
-    assert isinstance(e, aiger.AIG) or isinstance(e, BoolExpr)
-    if isinstance(e, aiger.AIG):
-        aig = e
-    else:  # isinstance(e, BoolExpr)
-        aig = e.aig
 
-    assert len(aig.outputs) == 1
-    assert len(aig.latches) == 0
+def _tseitin(e):
+    aig = cmn.extract_aig(e)
 
     node_map = dict(aig.node_map)
-
     output = node_map[fn.first(aig.outputs)]
-
     clauses = []
     symbol_table = {}  # maps input names to tseitin variables
     gates = {}         # maps gates to tseitin variables
-
     max_var = 0
 
     def fresh_var():
@@ -61,10 +52,26 @@ def tseitin(e):
     return clauses, symbol_table, max_var
 
 
-def satisfiable(aig):
+def is_satisfiable(e):
     formula = CNF()
-    clauses, _, _ = tseitin(aig)
+    clauses, _, _ = _tseitin(e)
     for clause in clauses:
         formula.append(clause)
     with Lingeling(bootstrap_with=formula.clauses) as ling:
         return ling.solve()
+
+
+def is_valid(e):
+    aig = cmn.extract_aig(e)
+    aig = aig >> aiger.bit_flipper(inputs=aig.outputs)  # negate
+    return not is_satisfiable(aig)
+
+
+def is_equal(e1, e2):
+    if isinstance(e1, aiger.AIG):
+        assert len(e1.outputs) is 1
+        e1 = aiger.BoolExpr(e1)
+    if isinstance(e2, aiger.AIG):
+        assert len(e2.outputs) is 1
+        e2 = aiger.BoolExpr(e2)
+    is_valid(e1 == e2)
