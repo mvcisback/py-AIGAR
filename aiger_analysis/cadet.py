@@ -57,8 +57,26 @@ def eliminate(e, variables):
     return _call_cadet(cmn.extract_aig(e), variables, projection=True)
 
 
+def simplify_quantifier_prefix(quantifiers):
+    seen_variables = set()
+    simplified_q = []
+    for q, variables in quantifiers:
+        assert len(seen_variables & set(variables)) is 0
+        seen_variables |= set(variables)
+        if len(variables) == 0:
+            continue
+        else:
+            if len(simplified_q) > 0 and simplified_q[-1][0] == q:
+                (last_q, last_vars) = simplified_q[-1]
+                simplified_q[-1] = (last_q, last_vars + variables)
+            else:
+                simplified_q.append((q, variables))
+    return simplified_q
+
+
 # accepts only closed formulas; i.e. all variables must be quantified
 def is_true_QBF(e, quantifiers):
+    quantifiers = simplify_quantifier_prefix(quantifiers)
     aig = cmn.extract_aig(e)
     assert sum(map(len, fn.pluck(1, quantifiers))) == len(aig.inputs)
     if len(quantifiers) is 1:  # solve with SAT

@@ -74,4 +74,4 @@ def is_equal(e1, e2):
     if isinstance(e2, aiger.AIG):
         assert len(e2.outputs) is 1
         e2 = aiger.BoolExpr(e2)
-    is_valid(e1 == e2)
+    return is_valid(e1 == e2)
