@@ -41,3 +41,22 @@ def test_simplify_quantifier_prefix4():
 def test_simplify_quantifier_prefix5():
     assert simplify_quantifier_prefix([('e', [1]), ('a', [2])]) == \
            [('e', [1]), ('a', [2])]
+
+
+def test_qbf1():
+    assert aa.is_true_QBF(expr, [('e', ['x', 'y'])])
+
+
+def test_qbf2():
+    assert not aa.is_true_QBF(expr, [('a', ['x', 'y'])])
+
+
+def test_qbf3():
+    assert not aa.is_true_QBF(expr, [('a', ['x']), ('e', ['y'])])
+
+
+expr2 = x ^ y
+
+
+def test_qbf4():
+    assert aa.is_true_QBF(expr2, [('a', ['x']), ('e', ['y'])])

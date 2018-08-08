@@ -1,7 +1,7 @@
 import os
 from subprocess import PIPE, call
 import tempfile
-import functools as fn
+import funcy as fn
 
 import aiger
 from aiger_analysis import is_satisfiable, is_valid
