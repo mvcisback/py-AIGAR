@@ -1,7 +1,8 @@
+import setuptools
 from setuptools import find_packages
 import distutils.command.build
 from distutils.core import setup
-import install_tools
+import install_cadet
 
 DESC = 'An extension of py-aiger providing advanced tool support, '\
        + ' including SAT and QBF solvers.'
@@ -14,9 +15,7 @@ class build(distutils.command.build.build):
     '''
     def run(self):
         # download and compile cadet
-        install_tools.install(
-            'cadet',
-            'https://github.com/MarkusRabe/cadet/archive/v2.5.tar.gz')
+        install_cadet.install()
 
         # now, do standard build
         distutils.command.build.build.run(self)

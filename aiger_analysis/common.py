@@ -1,6 +1,6 @@
 from aiger import AIG, BoolExpr
-from aigerbv import AIGBV, SignedBVExpr, UnsignedBVExpr
-
+from aigerbv.aigbv import AIGBV
+from aigerbv.expr import SignedBVExpr, UnsignedBVExpr
 
 def extract_aig(e):
     assert isinstance(e, AIG) or \
