@@ -1,7 +1,6 @@
 language: python
 python:
   - "3.6"
-before_script: python setup.py
 script: pytest --flake8 --cov=aiger_analysis --cov-report=html -n2
 cache:
   directories:
