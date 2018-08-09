@@ -1,15 +1,5 @@
-#!/usr/bin/env python
-#-*- coding:utf-8 -*-
-##
-## prepare.py
-##
-##  Adapted from python-sat
-##
-
-import datetime
 import os
 import shutil
-import sys
 import tarfile
 import zipfile
 from urllib.request import urlopen
@@ -22,7 +12,7 @@ def install(tool, address):
     print(f'Installing {tool}')
     if not os.path.exists('tools'):
         os.makedirs('tools')
-    file_name =  address.split('/')[-1]
+    file_name = address.split('/')[-1]
     archive = os.path.join('tools', file_name)
     download_archive(tool, address, archive)
     extract_archive(archive, tool)
@@ -68,9 +58,7 @@ def download_archive(name, url, save_to):
             break
 
 
-#
-#==============================================================================
-def extract_archive(archive, solver, put_inside = False):
+def extract_archive(archive, solver, put_inside=False):
     """
         Unzips/untars a previously downloaded archive file.
     """
@@ -84,8 +72,10 @@ def extract_archive(archive, solver, put_inside = False):
         tfile = tarfile.open(archive, 'r:gz')
         tfile.extractall(root)
 
-        # normally, directory should be the first name
-        # but glucose4.1 has some garbage in the archive
+        '''
+        Normally, directory should be the first name,
+        but glucose4.1 has some garbage in the archive.
+        '''
         for name in tfile.getnames():
             if not name.startswith('./.'):
                 directory = name
