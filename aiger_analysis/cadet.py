@@ -16,7 +16,7 @@ def _call_cadet_on_file(file_name,
     assert file_name.endswith('.aag')
     assert result_file.endswith('.aag')
 
-    ret = call(['./../../../cadet/dev/cadet',
+    ret = call(['./tools/cadet/cadet',
                  '--sat_by_qbf']
                 + (['-e', result_file] if projection else [])
                 + (['--cegar'] if use_cegar else [])
