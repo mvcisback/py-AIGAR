@@ -1,4 +1,3 @@
-import setuptools
 from setuptools import find_packages
 import distutils.command.build
 from distutils.core import setup
