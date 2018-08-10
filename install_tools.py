@@ -4,16 +4,18 @@ import tarfile
 import zipfile
 from urllib.request import urlopen
 
+INSTALL_DIR = os.path.expanduser("~/.cache/tools")
+
 
 def install(tool, address):
     """
         Tool must be a tuple of name and address.
     """
-    print(f'Installing {tool}')
-    if not os.path.exists('tools'):
-        os.makedirs('tools')
+    print(f'Installing {tool} to {INSTALL_DIR}')
+    if not os.path.exists(INSTALL_DIR):
+        os.makedirs(INSTALL_DIR)
     file_name = address.split('/')[-1]
-    archive = os.path.join('tools', file_name)
+    archive = os.path.join(INSTALL_DIR, file_name)
     download_archive(tool, address, archive)
     extract_archive(archive, tool)
     compile_solver(tool)
@@ -63,7 +65,7 @@ def extract_archive(archive, solver, put_inside=False):
         Unzips/untars a previously downloaded archive file.
     """
     print(f'Extracting {archive}')
-    root = os.path.join('tools', solver if put_inside else '')
+    root = os.path.join(INSTALL_DIR, solver if put_inside else '')
 
     if archive.endswith('.tar.gz'):
         if os.path.exists(archive[:-7]):
@@ -90,11 +92,11 @@ def extract_archive(archive, solver, put_inside=False):
         myzip.close()
 
     if not put_inside:
-        if os.path.exists(os.path.join('tools', solver)):
-            shutil.rmtree(os.path.join('tools', solver))
+        if os.path.exists(os.path.join(INSTALL_DIR, solver)):
+            shutil.rmtree(os.path.join(INSTALL_DIR, solver))
 
-        shutil.move(os.path.join('tools', directory),
-                    os.path.join('tools', solver))
+        shutil.move(os.path.join(INSTALL_DIR, directory),
+                    os.path.join(INSTALL_DIR, solver))
 
 
 def compile_solver(solver):
@@ -103,4 +105,4 @@ def compile_solver(solver):
     """
 
     print(f'Compiling {solver}')
-    os.system(f'cd tools/{solver} && ./configure && make && cd ../..')
+    os.system(f'cd {INSTALL_DIR}/{solver} && ./configure && make')
