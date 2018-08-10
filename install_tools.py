@@ -104,4 +104,4 @@ def compile_solver(solver):
     """
 
     print(f'Compiling {solver}')
-    os.system(f'cd tools/{solver} && ./configure && make && cd ../..')
+    os.system(f'cd {INSTALL_DIR}/{solver} && ./configure && make && cd ../..')
