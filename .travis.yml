@@ -1,9 +1,15 @@
 language: python
 python:
   - "3.6"
-script: pytest --flake8 --cov=aiger_analysis --cov-report=html -n2
+install: "pip install -r requirements.txt"
+script: pytest --flake8 --cov=aiger_analysis --cov-report=html -n2 --ignore=tools
 cache:
+  apt: true
   directories:
     - ${HOME}/.cache/pip
+    # - ${HOME}/.cache/tools/cadet
+before_install:
+  - python install_cadet.py
+  - export PATH=$PATH:${HOME}/tools/cadet
 after_success:
   - codecov
