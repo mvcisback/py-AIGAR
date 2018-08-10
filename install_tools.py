@@ -6,6 +6,7 @@ from urllib.request import urlopen
 
 INSTALL_DIR = os.path.expanduser("~/.cache/tools")
 
+
 def install(tool, address):
     """
         Tool must be a tuple of name and address.
@@ -104,4 +105,4 @@ def compile_solver(solver):
     """
 
     print(f'Compiling {solver}')
-    os.system(f'cd {INSTALL_DIR}/{solver} && ./configure && make && cd ../..')
+    os.system(f'cd {INSTALL_DIR}/{solver} && ./configure && make')
