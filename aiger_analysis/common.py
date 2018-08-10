@@ -10,10 +10,12 @@ def extract_aig(e):
            isinstance(e, SignedBVExpr) or \
            isinstance(e, UnsignedBVExpr)
     if isinstance(e, SignedBVExpr) or isinstance(e, UnsignedBVExpr):
-        e = e.aigbv
-    if isinstance(e, BoolExpr) or isinstance(e, AIGBV):
-        e = e.aig
-    assert isinstance(e, AIG)
-    assert len(e.outputs) is 1
-    assert len(e.latches) == 0
-    return e
+        aig = e.aigbv.aig
+    elif isinstance(e, BoolExpr) or isinstance(e, AIGBV):
+        aig = e.aig
+    else:
+        aig = e
+    assert isinstance(aig, AIG)
+    assert len(aig.outputs) is 1
+    assert len(aig.latches) == 0
+    return aig

@@ -4,6 +4,7 @@ satisfiability queries, model counting, and quantifier elimination.
 """
 
 import funcy as fn
+from bidict import bidict
 
 import aiger
 from pysat.formula import CNF
@@ -17,7 +18,7 @@ def _tseitin(e):
     node_map = dict(aig.node_map)
     output = node_map[fn.first(aig.outputs)]
     clauses = []
-    symbol_table = {}  # maps input names to tseitin variables
+    symbol_table = bidict()  # maps input names to tseitin variables
     gates = {}         # maps gates to tseitin variables
     max_var = 0
 
@@ -61,9 +62,8 @@ def is_satisfiable(e):
 
 
 def is_valid(e):
-    aig = cmn.extract_aig(e)
-    aig = aig >> aiger.bit_flipper(inputs=aig.outputs)  # negate
-    return not is_satisfiable(aig)
+    e = ~aiger.BoolExpr(cmn.extract_aig(e))
+    return not is_satisfiable(e)
 
 
 def is_equal(e1, e2):

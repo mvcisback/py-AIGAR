@@ -16,7 +16,7 @@ def _call_cadet_on_file(file_name,
     assert file_name.endswith('.aag')
     assert result_file.endswith('.aag')
 
-    ret = call(['./tools/cadet/cadet',
+    ret = call(['cadet',
                  '--sat_by_qbf']
                 + (['-e', result_file] if projection else [])
                 + (['--cegar'] if use_cegar else [])
@@ -42,9 +42,7 @@ def _call_cadet(aig, existentials, projection=False):
     with tempfile.TemporaryDirectory() as tmpdirname:
         # create input file
         aig_name = os.path.join(tmpdirname, 'input.aag')
-        input_file = open(aig_name, "w+")
-        input_file.write(str(aig))
-        input_file.close()
+        aig.write(aig_name)
         return _call_cadet_on_file(aig_name,
                                    os.path.join(tmpdirname, 'result.aag'),
                                    prefix,
