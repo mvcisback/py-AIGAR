@@ -1,10 +1,11 @@
 import os
-from subprocess import PIPE, call
+from subprocess import PIPE, call  # noqa
 import tempfile
 import funcy as fn
 
 import aiger
 from aiger_analysis import is_satisfiable, is_valid
+import aiger_analysis as aa
 import aiger_analysis.common as cmn
 
 
@@ -15,7 +16,6 @@ def _call_cadet_on_file(file_name,
                         use_cegar=False):
     assert file_name.endswith('.aag')
     assert result_file.endswith('.aag')
-
     ret = call(['cadet',
                  '--sat_by_qbf']
                 + (['-e', result_file] if projection else [])
@@ -23,15 +23,16 @@ def _call_cadet_on_file(file_name,
                 + ['--aiger_controllable_inputs', var_prefix]
                 + ['-v', '1']
                 + [file_name] # noqa
-                , stdout=PIPE  # comment this line to see more output
+                # , stdout=PIPE  # comment this line to see more output
                )
     assert not projection or ret == 10
     if projection:
         ret = aiger.parser.load(result_file)
+        ret = aa.abc.simplify(ret)
     return ret
 
 
-def _call_cadet(aig, existentials, projection=False):
+def _call_cadet(aig, existentials, projection=False, use_cegar=True):
     # prefix variables; make sure prefix does not exist elsewhere
     prefix = 'FbGiGjE7ol_'  # randomly generated
     assert all([not s.startswith(prefix) for s in aig.inputs])
@@ -46,7 +47,8 @@ def _call_cadet(aig, existentials, projection=False):
         return _call_cadet_on_file(aig_name,
                                    os.path.join(tmpdirname, 'result.aag'),
                                    prefix,
-                                   projection=projection)
+                                   projection=projection,
+                                   use_cegar=use_cegar)
 
 
 def eliminate(e, variables):
@@ -57,6 +59,7 @@ def simplify_quantifier_prefix(quantifiers):
     seen_variables = set()
     simplified_q = []
     for q, variables in quantifiers:
+        variables = list(map(str, variables))
         assert len(seen_variables & set(variables)) is 0
         seen_variables |= set(variables)
         if len(variables) == 0:
@@ -82,9 +85,11 @@ def is_true_QBF(e, quantifiers):
             assert quantifiers[0][0] is 'e'
             return is_satisfiable(aig)
     elif len(quantifiers) is 2:  # 2QBF
-        if quantifiers[0][0] is 'e':
+        true_return_code = 10
+        if quantifiers[-1][0] is 'a':
             e = ~aiger.BoolExpr(aig)
             aig = e.aig
-        return _call_cadet(aig, quantifiers[1][1]) == 10
+            true_return_code = 20
+        return _call_cadet(aig, quantifiers[1][1]) == true_return_code
     else:
         raise NotImplementedError('Cannot handle general QBF at the moment')
