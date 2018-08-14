@@ -78,7 +78,7 @@ def install_cadet():
     with working_directory(cadet_path):
         subprocess.check_call(GET_CADET_CMD, shell=True)
 
-        with zipfile.ZipFile(cadet_path / "v2.5.tar.gz", "r") as f:
+        with tarfile.open("v2.5.tar.gz") as f:
             f.extractall()
 
     with working_directory(cadet_path / "cadet-2.5"):
