@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MarkusRabe/py-aiger-analysis.svg?branch=master)](https://travis-ci.org/MarkusRabe/py-aiger-analysis)
+[![Build Status](https://travis-ci.org/mvcisback/py-aiger-analysis.svg?branch=master)](https://travis-ci.org/mvcisback/py-aiger-analysis)
 [![codecov](https://codecov.io/gh/mvcisback/py-aiger-analysis/branch/master/graph/badge.svg)](https://codecov.io/gh/mvcisback/py-aiger-analysis)
 [![Updates](https://pyup.io/repos/github/mvcisback/py-aiger-analysis/shield.svg)](https://pyup.io/repos/github/mvcisback/py-aiger-analysis/)
 
