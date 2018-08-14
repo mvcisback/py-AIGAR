@@ -12,7 +12,7 @@ cache:
     - ${HOME}/.cache/abc
 before_install:
   - python travis_install.py
-  - export PATH=$PATH:${HOME}/.cache/tools/cadet
+  - export PATH=$PATH:${HOME}/.cache/tools/cadet/cadet-2.5
   - export PATH=$PATH:${HOME}/.cache/aiger/aiger-1.9.9
   - export PATH=$PATH:${HOME}/.cache/abc/abc-master
 after_success:
