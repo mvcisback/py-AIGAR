@@ -11,9 +11,9 @@ import aiger_analysis.common as cmn
 
 
 class CadetCodes(Enum):
-     QBF_IS_TRUE = 10
-     QBF_IS_FALSE = 20
-     QBF_IS_UNKNOWN = 30
+    QBF_IS_TRUE = 10
+    QBF_IS_FALSE = 20
+    QBF_IS_UNKNOWN = 30
 
 
 def _call_cadet_on_file(file_name,
