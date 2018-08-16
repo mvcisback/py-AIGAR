@@ -8,3 +8,5 @@
 
 
 Please look up the documentation of <a href="https://github.com/mvcisback/py-aiger">py-aiger</a>.
+
+This package currently assumes `cadet`, `abc`, and `aigtoaig` installed in the PATH.
