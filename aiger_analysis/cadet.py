@@ -2,11 +2,18 @@ import os
 from subprocess import PIPE, call  # noqa
 import tempfile
 import funcy as fn
+from enum import Enum
 
 import aiger
 from aiger_analysis import is_satisfiable, is_valid
 import aiger_analysis as aa
 import aiger_analysis.common as cmn
+
+
+class CadetCodes(Enum):
+     QBF_IS_TRUE = 10
+     QBF_IS_FALSE = 20
+     QBF_IS_UNKNOWN = 30
 
 
 def _call_cadet_on_file(file_name,
@@ -25,7 +32,7 @@ def _call_cadet_on_file(file_name,
                 + [file_name] # noqa
                 # , stdout=PIPE  # comment this line to see more output
                )
-    assert not projection or ret == 10
+    assert not projection or ret == CadetCodes.QBF_IS_TRUE.value
     if projection:
         ret = aiger.parser.load(result_file)
         ret = aa.abc.simplify(ret)
@@ -85,11 +92,11 @@ def is_true_QBF(e, quantifiers):
             assert quantifiers[0][0] is 'e'
             return is_satisfiable(aig)
     elif len(quantifiers) is 2:  # 2QBF
-        true_return_code = 10
+        true_return_code = CadetCodes.QBF_IS_TRUE.value
         if quantifiers[-1][0] is 'a':
             e = ~aiger.BoolExpr(aig)
             aig = e.aig
-            true_return_code = 20
+            true_return_code = CadetCodes.QBF_IS_FALSE.value
         return _call_cadet(aig, quantifiers[1][1]) == true_return_code
     else:
         raise NotImplementedError('Cannot handle general QBF at the moment')
