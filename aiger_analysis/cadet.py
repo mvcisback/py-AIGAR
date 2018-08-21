@@ -34,10 +34,7 @@ def _call_cadet_on_file(file_name,
     cmd += ['-v', '1']
     cmd += [file_name]
 
-    if verbose:
-        ret = call(cmd)
-    else:
-        ret = call(cmd, stdout=PIPE)
+    ret = call(cmd) if verbose else call(cmd, stdout=PIPE)
 
     assert not projection or ret == CadetCodes.QBF_IS_TRUE.value
     if projection:

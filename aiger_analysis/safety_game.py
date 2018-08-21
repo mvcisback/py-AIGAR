@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+import itertools
 from typing import NamedTuple
 
 import aiger
@@ -43,20 +44,20 @@ class Game(NamedTuple):
     def inputs(self):
         return self.aig.inputs
 
-    def is_realizable(self, use_cegar=False):
+    def is_realizable(self, use_cegar=False, verbose=False):
         assert len(self.aig.outputs) is 1
         bad = atom(False)
         single_step = BoolExpr(_cutlatches_and_rename(self.aig) >>
                                aiger.sink(self.aig.latches))
 
-        i = 0
-        while True:
-            i += 1
-            print(f'Iteration {i}')
+        for i in itertools.count():  # to infinity and beyond
+            print(f'Iteration {i+1}')
 
             miter = ~single_step & ~bad
-            miter = eliminate(miter, self.system, verbose=True)
-            next_bad = bad | eliminate(~miter, self.environment, verbose=True)
+            miter = eliminate(miter, self.system, verbose=verbose)
+            next_bad = bad | eliminate(~miter,
+                                       self.environment,
+                                       verbose=verbose)
 
             zero_inputs = {x: False for x in next_bad.inputs}
             if next_bad(inputs=zero_inputs):
@@ -76,13 +77,18 @@ if __name__ == "__main__":
         description="A safety game solver using repeated projections.")
     arg_parser.add_argument('--cegar', dest='cegar', action='store_true',
                             help="Support CADET' projection with CEGAR.")
+    arg_parser.add_argument('-v', '--verbose', dest='verbose',
+                            action='store_true',
+                            help="More output; including CADET -v 1.")
     arg_parser.add_argument('input_file', action='store', nargs='?',
                             type=str,
                             help='Input file in extended AIGER format')
+
     args = arg_parser.parse_args()
     file_name = args.input_file
     if file_name is None:
         arg_parser.print_help(sys.stderr)
         quit(1)
-    res = Game(aiger.load(file_name)).is_realizable(use_cegar=args.cegar)
+    res = Game(aiger.load(file_name)).is_realizable(use_cegar=args.cegar,
+                                                    verbose=args.verbose)
     print(res)
