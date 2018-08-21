@@ -20,18 +20,22 @@ def _call_cadet_on_file(file_name,
                         result_file,
                         var_prefix,
                         projection=False,
-                        use_cegar=False):
+                        use_cegar=False,
+                        verbose=False):
     assert file_name.endswith('.aag')
     assert result_file.endswith('.aag')
-    ret = call(['cadet',
-                 '--sat_by_qbf']
-                + (['-e', result_file] if projection else [])
-                + (['--cegar'] if use_cegar else [])
-                + ['--aiger_controllable_inputs', var_prefix]
-                + ['-v', '1']
-                + [file_name] # noqa
-                # , stdout=PIPE  # comment this line to see more output
-               )
+
+    cmd = ['cadet', '--sat_by_qbf']
+    if projection:
+        cmd += ['-e', result_file]
+    if use_cegar:
+        cmd += ['--cegar']
+    cmd += ['--aiger_controllable_inputs', var_prefix]
+    cmd += ['-v', '1']
+    cmd += [file_name]
+
+    ret = call(cmd) if verbose else call(cmd, stdout=PIPE)
+
     assert not projection or ret == CadetCodes.QBF_IS_TRUE.value
     if projection:
         ret = aiger.parser.load(result_file)
@@ -39,7 +43,11 @@ def _call_cadet_on_file(file_name,
     return ret
 
 
-def _call_cadet(aig, existentials, projection=False, use_cegar=True):
+def _call_cadet(aig,
+                existentials,
+                projection=False,
+                use_cegar=True,
+                verbose=False):
     # prefix variables; make sure prefix does not exist elsewhere
     prefix = 'FbGiGjE7ol_'  # randomly generated
     assert all([not s.startswith(prefix) for s in aig.inputs])
@@ -55,11 +63,18 @@ def _call_cadet(aig, existentials, projection=False, use_cegar=True):
                                    os.path.join(tmpdirname, 'result.aag'),
                                    prefix,
                                    projection=projection,
-                                   use_cegar=use_cegar)
+                                   use_cegar=use_cegar,
+                                   verbose=verbose)
 
 
-def eliminate(e, variables):
-    return _call_cadet(cmn.extract_aig(e), variables, projection=True)
+def eliminate(e, variables, verbose=False):
+    result_aig = _call_cadet(cmn.extract_aig(e),
+                             variables,
+                             projection=True,
+                             verbose=verbose)
+    if type(e) is aiger.BoolExpr:
+        return aiger.BoolExpr(result_aig)
+    return result_aig
 
 
 def simplify_quantifier_prefix(quantifiers):
