@@ -10,8 +10,6 @@
 
 [![PyPI version shields.io](https://img.shields.io/pypi/v/py-aiger-analysis.svg)](https://pypi.python.org/pypi/py-aiger-analysis/)
 [![PyPI license](https://img.shields.io/pypi/l/py-aiger-analysis.svg)](https://pypi.python.org/pypi/py-aiger-analysis//)
-# py-aiger-analysis
-
 
 Please look up the documentation of <a href="https://github.com/mvcisback/py-aiger">py-aiger</a>.
 
