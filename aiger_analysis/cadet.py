@@ -3,6 +3,7 @@ from subprocess import PIPE, call  # noqa
 import tempfile
 import funcy as fn
 from enum import Enum
+from typing import List
 
 import aiger
 from aiger_analysis import is_satisfiable, is_valid
@@ -44,10 +45,11 @@ def _call_cadet_on_file(file_name,
 
 
 def _call_cadet(aig,
-                existentials,
+                existentials: List[str],
                 projection=False,
                 use_cegar=True,
                 verbose=False):
+    assert not isinstance(existentials, str)
     # prefix variables; make sure prefix does not exist elsewhere
     prefix = 'FbGiGjE7ol_'  # randomly generated
     assert all([not s.startswith(prefix) for s in aig.inputs])
