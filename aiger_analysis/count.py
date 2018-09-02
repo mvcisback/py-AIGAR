@@ -1,6 +1,8 @@
 import aiger
 import funcy as fn
 
+import aiger_analysis.common as cmn
+
 try:
     from dd.cudd import BDD
 except ImportError:
@@ -23,7 +25,7 @@ def to_bdd(circ, output):
     bdd.declare(*input_refs_to_var.values())
 
     gate_nodes = {}
-    for gate in fn.cat(circ._eval_order):
+    for gate in cmn.eval_order(circ):
         if isinstance(gate, aiger.aig.ConstFalse):
             gate_nodes[gate] = bdd.add_expr('False')
         elif isinstance(gate, aiger.aig.Inverter):
