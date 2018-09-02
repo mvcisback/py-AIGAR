@@ -3,12 +3,12 @@ This module provides basic operations on aig circuits, such as
 satisfiability queries, model counting, and quantifier elimination.
 """
 
+import aiger
 import funcy as fn
 from bidict import bidict
-
-import aiger
 from pysat.formula import CNF
 from pysat.solvers import Lingeling
+
 import aiger_analysis.common as cmn
 
 
@@ -29,7 +29,7 @@ def _tseitin(e):
 
     true_var = None  # Reserved variable name for constant True
 
-    for gate in fn.cat(aig._eval_order):
+    for gate in cmn.eval_order(aig):
         if isinstance(gate, aiger.aig.ConstFalse):
             if true_var is None:
                 true_var = fresh_var()
