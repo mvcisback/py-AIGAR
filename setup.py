@@ -19,6 +19,7 @@ setup(
         'funcy',
         'dd',
         'python-sat',
+        'toposort',
     ],
     packages=find_packages(),
     zip_safe=False,
