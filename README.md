@@ -39,9 +39,7 @@ We plan to release a version on PIP, including all required tools.
 The library is currently intended to use with py-aiger expressions.
 
 ```python
-import aiger_analysis as aa # import (simplify,
-							# is_satisfiable, is_valid, is_equal,
-							# is_true_QBF, eliminate)
+import aiger_analysis as aa
 import aiger
 
 x, y = aiger.atom('x'), aiger.atom('y')
@@ -65,7 +63,9 @@ assert aa.is_equal(expr, aa.simplify(expr))
 assert not aa.is_true_QBF(expr, [('a', ['x']), ('e', ['y'])])
 
 '''
-Call CADET to eliminate a given list of variables from the expression. The resulting expression is a formula over the remaining variables that is true if, and only if, there is a satisfying assignment to the indicated variables.
+ Call CADET to eliminate a given list of variables from the expression. The
+ resulting expression is a formula over the remaining variables that is true
+ if, and only if, there is a satisfying assignment to the indicated variables.
 '''
 also_x = aa.eliminate(expr, ['y'])
 assert aa.is_equal(x, also_x)
