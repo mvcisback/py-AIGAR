@@ -46,21 +46,26 @@ class Game(NamedTuple):
 
     def is_realizable(self, use_cegar=False, verbose=False):
         assert len(self.aig.outputs) is 1
-        bad = atom(False)
-        single_step = BoolExpr(_cutlatches_and_rename(self.aig) >>
-                               aiger.sink(self.aig.latches))
+        initial_state = {x: val for (x, val) in self.aig.latch2init}
+        bad = BoolExpr(aiger.sink(self.aig.latches) | atom(False).aig)
+        transition_relation = \
+            _cutlatches_and_rename(self.aig) >> \
+            aiger.bit_flipper(inputs=self.aig.outputs)
 
         for i in itertools.count():  # to infinity and beyond
             print(f'Iteration {i+1}')
 
-            miter = ~single_step & ~bad
-            miter = eliminate(miter, self.system, verbose=verbose)
-            next_bad = bad | eliminate(~miter,
+            tmp = transition_relation >> (~bad).aig  # do not go to a bad state
+            miter1 = BoolExpr(tmp >> aiger.and_gate(tmp.outputs))
+            miter2 = eliminate(miter1, self.system, verbose=verbose)
+            next_bad = bad | eliminate(~miter2,
                                        self.environment,
                                        verbose=verbose)
 
-            zero_inputs = {x: False for x in next_bad.inputs}
-            if next_bad(inputs=zero_inputs):
+            # delete comments to avoid them accumulate
+            next_bad = BoolExpr(next_bad.aig.evolve(comments=()))
+
+            if next_bad(inputs=initial_state):
                 print('Unrealizable')
                 return False
 
