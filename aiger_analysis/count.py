@@ -61,7 +61,7 @@ class BDDExprVisitor(NodeVisitor):
         return aiger.atom(node.text)
 
     def visit_ite(self, _, children):
-        return aiger.ite(children[1], children[3], children[5])
+        return children[1].select(children[3], children[5])
 
     def visit_neg(self, _, children):
         return ~children[1]
