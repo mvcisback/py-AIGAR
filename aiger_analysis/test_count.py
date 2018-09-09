@@ -9,6 +9,22 @@ import hypothesis.strategies as st
 from aiger_analysis import count
 
 
+@given(aigh.Circuits, st.data())
+def test_bdd_transform(circ, data):
+    circ = circ.unroll(3)
+    out = list(circ.outputs)[0]
+    f, bdd, relabel = count.to_bdd(circ, output=out)
+    expr = count.from_bdd(f)
+    circ2 = expr.aig['i', relabel]['o', {expr.output: out}]
+
+    assert not circ2.latches
+    assert circ2.inputs <= circ.inputs
+    assert out in circ2.outputs
+
+    test_input = {f'{i}': data.draw(st.booleans()) for i in circ.inputs}
+    assert circ(test_input)[0][out] == circ2(test_input)[0][out]
+
+
 @given(aigh.Circuits)
 def test_count_smoke(circ):
     circ = circ.unroll(3)
