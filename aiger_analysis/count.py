@@ -14,15 +14,13 @@ def to_bdd(circ_or_expr, output=None):
     if isinstance(circ_or_expr, aiger.BoolExpr):
         circ, output = circ_or_expr.aig, circ_or_expr.output
     else:
-        assert output is not None
         circ = circ_or_expr
-
-    assert len(circ.outputs) == 1 or (output is not None)
-    assert len(circ.latches) == 0
 
     node_map = dict(circ.node_map)
 
+    assert len(circ.latches) == 0
     if output is None:
+        assert len(circ.outputs) == 1
         output = node_map[fn.first(circ.outputs)]
     else:
         output = node_map[output]  # By name instead.
