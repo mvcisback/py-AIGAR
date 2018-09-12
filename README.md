@@ -25,14 +25,29 @@ This README assumes basic familiarity with py-aiger, please check out the docume
 
 # Installation
 
-Clone respository, then:
+One can install via pip:
+
+`$ pip install py-aiger-analysis[SAT,BDD]`
+
+or without BDD support:
+
+`pip install py-aiger-analysis[SAT]`
+
+or without BDD or SAT support:
+
+`pip install py-aiger-analysis`
+
+## Developer install
+Clone respository and execute:
 
 `$ python setup.py develop`
+
+## Additional Requirements
+
 
 This package currently assumes [CADET](https://github.com/MarkusRabe/cadet), [ABC](https://github.com/berkeley-abc/abc), and [aigtoaig](http://fmv.jku.at/aiger/) installed in the PATH.
 
 We plan to release a version on PIP, including all required tools.
-
 
 # Using Py-Aiger-Analysis
 
@@ -44,16 +59,49 @@ import aiger
 
 x, y = aiger.atom('x'), aiger.atom('y')
 expr = x & y
+```
 
+## SAT solver interface via python-sat. Install with SAT option.
+```python
 # Call a SAT solver to check if there is a satisfying assignment.
-assert aa.is_satisfiable(expr)
+`assert aa.is_satisfiable(expr)`
 
 # Check if all assignments are satisfying, using a satsolver.
-assert not aa.is_valid(expr)
+`assert not aa.is_valid(expr)`
 
 # Check if two expressions are equal, using a satsolver.
-assert aa.is_equal(expr, aa.simplify(expr))
+`assert aa.is_equal(expr, aa.simplify(expr))`
+```
 
+## BDD interface:
+
+```python
+# One can convert a boolean expression to a bdd via:
+f, manager, relabels = aa.to_bdd(expr) 
+
+# or given an aiger circuit, one can convert to a bdd by specifying the output.
+# If the aiger circuit only has one output, the output does not need to be
+# specificed.
+
+f, manager, relabels = aa.to_bdd(expr.aig, output=expr.output)
+
+# f is now a bdd expression and manager is the bdd manager. 
+
+# Because aiger supports a larger set of names than the dd package,
+# the inputs of the expression are relabeled to names given by the
+# bidict relabels.
+
+# One can convert back to an aiger boolean expression via:
+expr2 = aa.from_bdd(f)
+
+# We currently also implement counting the number of satisifying solutions using BDDs.
+# This is done by first converting an expression to a bdd and the using the bdd's count
+# primative.
+c = aa.count(expr, percent=True)
+```
+
+## QBF solver interface via 
+```python
 '''
  Call the QBF solver CADET to check if this QBF is true. The second argument
  indicates the quantifier prefix: 'a' stands for universal quantifiers, 'e' for
