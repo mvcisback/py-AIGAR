@@ -10,7 +10,14 @@ except ImportError:
     from dd.autoref import BDD
 
 
-def to_bdd(circ_or_expr, output=None):
+def to_bdd(circ_or_expr, output=None, manager=None, renamer=None):
+    if renamer is None:
+        _count = 0
+        def renamer(_):
+            nonlocal _count
+            _count += 1
+            return f"x{_count}"
+
     if isinstance(circ_or_expr, aiger.BoolExpr):
         circ, output = circ_or_expr.aig, circ_or_expr.output
     else:
@@ -25,23 +32,24 @@ def to_bdd(circ_or_expr, output=None):
     else:
         output = node_map[output]  # By name instead.
 
-    bdd = BDD()
-    input_refs_to_var = {ref: f"x{i}" for i, ref in enumerate(circ.inputs)}
-    bdd.declare(*input_refs_to_var.values())
+    manager = BDD() if manager is None else manager
+        
+    input_refs_to_var = {ref: renamer(i) for i, ref in enumerate(circ.inputs)}
+    manager.declare(*input_refs_to_var.values())
 
     gate_nodes = {}
     for gate in cmn.eval_order(circ):
         if isinstance(gate, aiger.aig.ConstFalse):
-            gate_nodes[gate] = bdd.add_expr('False')
+            gate_nodes[gate] = manager.add_expr('False')
         elif isinstance(gate, aiger.aig.Inverter):
             gate_nodes[gate] = ~gate_nodes[gate.input]
         elif isinstance(gate, aiger.aig.Input):
-            gate_nodes[gate] = bdd.add_expr(input_refs_to_var[gate.name])
+            gate_nodes[gate] = manager.add_expr(input_refs_to_var[gate.name])
         elif isinstance(gate, aiger.aig.AndGate):
             gate_nodes[gate] = gate_nodes[gate.left] & gate_nodes[gate.right]
 
     relabels = {v: k for k, v in input_refs_to_var.items()}
-    return gate_nodes[output], bdd, relabels
+    return gate_nodes[output], manager, relabels
 
 
 BDDEXPR_GRAMMAR = Grammar(u'''
