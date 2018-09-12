@@ -18,11 +18,11 @@ setup(
         'py-aiger',
         'py-aiger-bv',
         'funcy',
-        'python-sat',
         'toposort',
     ],
     extras_require={
-        'BDD':  ["dd"],
+        'BDD':  ['dd'],
+        'SAT': ['python-sat'],
     },
     packages=find_packages(),
 )

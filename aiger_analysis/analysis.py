@@ -6,8 +6,14 @@ satisfiability queries, model counting, and quantifier elimination.
 import aiger
 import funcy as fn
 from bidict import bidict
-from pysat.formula import CNF
-from pysat.solvers import Lingeling
+try:
+    from pysat.formula import CNF
+    from pysat.solvers import Lingeling
+except ImportError:
+    raise ImportError(
+        "Cannot import pysat.formula or pysat.solvers." +
+        "Reinstall with SAT support."
+    )
 
 import aiger_analysis.common as cmn
 

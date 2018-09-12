@@ -10,7 +10,7 @@ except ImportError:
     except ImportError:
         raise ImportError(
             "Cannot import dd.cudd or dd.autoref." +
-            "Reinstall with BDD resupport."
+            "Reinstall with BDD support."
         )
 
 import aiger_analysis.common as cmn
