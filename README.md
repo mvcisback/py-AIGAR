@@ -31,11 +31,11 @@ One can install via pip:
 
 or without BDD support:
 
-`pip install py-aiger-analysis[SAT]`
+`$ pip install py-aiger-analysis[SAT]`
 
 or without BDD or SAT support:
 
-`pip install py-aiger-analysis`
+`$ pip install py-aiger-analysis`
 
 ## Developer install
 Clone respository and execute:
