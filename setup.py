@@ -7,21 +7,22 @@ DESC = 'An extension of py-aiger providing advanced tool support, '\
 
 setup(
     name='py-aiger-analysis',
-    version='0.1',
+    version='0.0.1',
     description=DESC,
     url='http://github.com/mvcisback/py-aiger-analysis',
     author='Marcell Vazquez-Chanlatte',
     author_email='marcell.vc@eecs.berkeley.edu',
     license='MIT',
     install_requires=[
+        'bidict',
         'py-aiger',
         'py-aiger-bv',
         'funcy',
-        'dd',
         'python-sat',
         'toposort',
     ],
+    extras_require={
+        'BDD':  ["dd"],
+    },
     packages=find_packages(),
-    zip_safe=False,
-    include_package_data=True,
 )
