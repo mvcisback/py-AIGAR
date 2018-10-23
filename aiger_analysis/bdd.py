@@ -20,7 +20,7 @@ def to_bdd(circ_or_expr, output=None, manager=None, renamer=None):
     if renamer is None:
         _count = 0
 
-        def renamer(_):
+        def renamer(*_):
             nonlocal _count
             _count += 1
             return f"x{_count}"
@@ -41,7 +41,7 @@ def to_bdd(circ_or_expr, output=None, manager=None, renamer=None):
 
     manager = BDD() if manager is None else manager
 
-    input_refs_to_var = {ref: renamer(i) for i, ref in enumerate(circ.inputs)}
+    input_refs_to_var = {ref: renamer(i, ref) for i, ref in enumerate(circ.inputs)}
     manager.declare(*input_refs_to_var.values())
 
     gate_nodes = {}
