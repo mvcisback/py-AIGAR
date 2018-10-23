@@ -91,5 +91,7 @@ def _parse_bddexpr(ite_str: str):
     return BDDExprVisitor().visit(BDDEXPR_GRAMMAR.parse(ite_str))
 
 
-def from_bdd(bdd_func):
+def from_bdd(bdd_func, manager=None):
+    if manager:
+        return _parse_bddexpr(manager.to_expr(bdd_func))
     return _parse_bddexpr(bdd_func.to_expr())
