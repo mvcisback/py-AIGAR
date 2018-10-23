@@ -41,7 +41,9 @@ def to_bdd(circ_or_expr, output=None, manager=None, renamer=None):
 
     manager = BDD() if manager is None else manager
 
-    input_refs_to_var = {ref: renamer(i, ref) for i, ref in enumerate(circ.inputs)}
+    input_refs_to_var = {
+        ref: renamer(i, ref) for i, ref in enumerate(circ.inputs)
+    }
     manager.declare(*input_refs_to_var.values())
 
     gate_nodes = {}
