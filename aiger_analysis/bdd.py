@@ -64,7 +64,7 @@ BDDEXPR_GRAMMAR = Grammar(u'''
 bdd_expr = neg / ite / id / const
 ite = "ite(" id ", " bdd_expr ", " bdd_expr ")"
 neg = "(~ " bdd_expr ")"
-id = ~r"[a-z\d]+"
+id = ~r"[a-z\\d]+"
 const = "TRUE" / "FALSE"
 ''')
 
