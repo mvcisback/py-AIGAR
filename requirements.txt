@@ -1,6 +1,6 @@
 git+git://github.com/mvcisback/hypothesis-cfg.git@master#egg=hypothesis_cfg
 py-aiger==3.3.0
-py-aiger-bv==0.2.1
+py-aiger-bv==0.5.1
 codecov==2.0.15
 dd==0.5.4
 funcy==1.11
