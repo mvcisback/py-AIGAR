@@ -2,7 +2,7 @@ git+git://github.com/mvcisback/hypothesis-cfg.git@master#egg=hypothesis_cfg
 py-aiger==4.0.1
 py-aiger-bv==2.0.0
 codecov==2.0.22
-dd==0.5.4
+dd==0.5.5
 funcy==1.11
 bidict==0.17.5
 hypothesis==3.66.30 # pyup: ignore
