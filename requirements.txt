@@ -3,7 +3,7 @@ py-aiger==4.0.2
 py-aiger-bv==2.1.0
 codecov==2.0.22
 dd==0.5.5
-funcy==1.11
+funcy==1.14
 bidict==0.17.5
 hypothesis==3.66.30 # pyup: ignore
 pytest==3.2.3 # pyup: ignore
