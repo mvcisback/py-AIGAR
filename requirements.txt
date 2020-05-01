@@ -4,7 +4,7 @@ py-aiger-bv==2.1.0
 codecov==2.0.22
 dd==0.5.5
 funcy==1.14
-bidict==0.17.5
+bidict==0.19.0
 hypothesis==3.66.30 # pyup: ignore
 pytest==3.2.3 # pyup: ignore
 pytest-cov==2.5.1 # pyup: ignore
